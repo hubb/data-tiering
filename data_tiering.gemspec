@@ -20,8 +20,13 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rake'
   s.add_development_dependency 'pry'
   s.add_development_dependency 'pry-nav'
+  s.add_development_dependency 'timecop'
 
-  s.files        = `git ls-files`.split('\n')
-  s.test_files   = `git ls-files -- spec/*/*_spec*`.split('\n')
+  s.add_dependency 'activerecord'
+  s.add_dependency 'mysql2'
+  s.add_dependency 'rails'
+
+  s.files        = `git ls-files`.split("\n")
+  s.test_files   = `git ls-files -- spec/*/*_spec*`.split("\n")
   s.require_path = 'lib'
 end
