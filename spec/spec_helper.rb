@@ -17,31 +17,6 @@ RSpec.configure do |config|
   config.color_enabled = true
   config.formatter     = :documentation
 
-  $saved_constants = {}
-
-  # Allow constant stubbing
-  def with_constants(constants, &block)
-    constants.each do |constant, val|
-      $saved_constants[constant] = const_get(constant) if const_defined?(constant)
-      Kernel::silence_warnings { const_set(constant, val) }
-    end
-
-    begin
-      block.call
-    ensure
-      constants.each do |constant, val|
-        Kernel::silence_warnings { const_set(constant, $saved_constants[constant]) }
-      end
-    end
-  end
-
-  def overwrite_constant(constant, value, object = Object)
-    constant = constant.to_sym
-    $saved_constants[object] ||= {}
-    $saved_constants[object][constant] = object.const_get(constant) unless $saved_constants[object].has_key?(constant)
-    Kernel::silence_warnings { object.const_set(constant, value) }
-  end
-
   config.before(:suite) do
     setup_database
   end
