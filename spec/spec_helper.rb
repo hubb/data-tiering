@@ -75,8 +75,23 @@ RSpec.configure do |config|
     end
   end
 
+
+  class FakeCache
+    def initialize
+      @values = {}
+    end
+
+    def read(key)
+      @values[key]
+    end
+
+    def write(key, value)
+      @values[key] = value
+    end
+  end
+
   def cache
-    @_cache ||= Struct.new(:read, :write, :clear).new
+    @_cache ||= FakeCache.new
   end
 
 end
