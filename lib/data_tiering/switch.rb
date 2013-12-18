@@ -105,7 +105,7 @@ module DataTiering
     end
 
     def current_active_number_from_cache
-      cache.read(cache_key).andand.to_i
+      (cache.read(cache_key) || 0).to_i
     end
 
     def current_active_number_from_database
