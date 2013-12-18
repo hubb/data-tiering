@@ -28,7 +28,7 @@ describe DataTiering::Switch do
 
     it 'survives memcache evictions' do
       switch_current_active_number
-      Rails.cache.clear
+      cache.clear
       subject.active_table_name_for("table_name").should == "table_name_secondary_1"
     end
 

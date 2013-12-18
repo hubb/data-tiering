@@ -93,6 +93,10 @@ RSpec.configure do |config|
     def write(key, value)
       @values[key] = value
     end
+
+    def clear
+      @values = {}
+    end
   end
 
   def cache
