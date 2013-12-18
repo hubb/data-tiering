@@ -165,9 +165,14 @@ describe DataTiering::Sync::SyncTable do
       context "batch processing" do
 
         before do
-          overwrite_constant :BATCH_SIZE, 1000, DataTiering::Sync::SyncTable::SyncDeltas
+          @original_contstant_value = DataTiering::Sync::SyncTable::SyncDeltas::BATCH_SIZE
+          DataTiering::Sync::SyncTable::SyncDeltas::BATCH_SIZE = 1000
           DataTieringSyncSpec::Property.create!(:id => 100)
           DataTieringSyncSpec::Property.create!(:id => 1100)
+        end
+
+        after do
+          DataTiering::Sync::SyncTable::SyncDeltas::BATCH_SIZE = @original_contstant_value
         end
 
         it 'copies all properties when there is more than one batch' do
