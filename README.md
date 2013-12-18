@@ -47,3 +47,8 @@ Query OK, 0 rows affected (0.01 sec)
 > exit
 ```
 
+
+### NOTES
+
+Assumes you're using active record and is correctly configured with an ActiveRecord::Logger
+

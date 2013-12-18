@@ -12,6 +12,10 @@ require 'data_tiering'
 require 'data_tiering/sync'
 require 'support/models'
 
+require 'logger'
+ActiveRecord::Base.logger = Logger.new(STDOUT)
+ActiveRecord::Base.logger.level = 2
+
 RSpec.configure do |config|
 
   config.color_enabled = true
