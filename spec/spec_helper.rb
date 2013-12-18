@@ -10,9 +10,10 @@ require 'rspec'
 require 'data_tiering'
 require 'data_tiering/sync'
 
-require 'support/connection'
-
 RSpec.configure do |config|
+
+  config.color_enabled = true
+  config.formatter     = :documentation
 
   $saved_constants = {}
 
@@ -39,9 +40,22 @@ RSpec.configure do |config|
     Kernel::silence_warnings { object.const_set(constant, value) }
   end
 
-  config.before :all do
+  config.before(:all) do
+    setup_database
+  end
+
+  config.after(:all) do
+    drop_database
+  end
+
+  def setup_database
+    ActiveRecord::Base.establish_connection(
+      :adapter  =>  'sqlite3',
+      :database =>  ":memory:"
+    )
+
     m = ActiveRecord::Migration
-    m.verbose = false
+    m.verbose = true
     m.create_table :properties do |t|
       t.string :name
       t.text :description
@@ -58,12 +72,11 @@ RSpec.configure do |config|
     end
   end
 
-  config.after :all do
+  def drop_database
     m = ActiveRecord::Migration
-    m.verbose = false
+    m.verbose = true
     m.drop_table :properties
     m.drop_table :properties_secondary_0
   end
-
 
 end
