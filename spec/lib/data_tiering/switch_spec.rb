@@ -141,21 +141,37 @@ describe DataTiering::Switch do
   end
 
   describe '#enabled?' do
+    context "search" do
+      it "is enabled when no constant is specified" do
+        described_class.new(cache).should be_enabled
+      end
 
-    it 'is enabled for search iff DATA_TIERING_SEARCH_ENABLED is true' do
-      described_class.new(cache).should be_enabled
-      with_constants(:DATA_TIERING_SEARCH_ENABLED => false) do
-        described_class.new.should_not be_enabled
+      it "is disabled if the DATA_TIERING_SEARCH_ENABLED is false" do
+        DataTiering::Switch::DATA_TIERING_SEARCH_ENABLED = false
+        described_class.new(cache).should_not be_enabled
+      end
+
+      it "is enabled if the DATA_TIERING_SEARCH_ENABLED is true" do
+        DataTiering::Switch::DATA_TIERING_SEARCH_ENABLED = true
+        described_class.new(cache).should be_enabled
       end
     end
 
-    it 'is enabled for sync iff DATA_TIERING_SYNC_ENABLED is true' do
-      described_class.new(cache, :sync).should be_enabled
-      with_constants(:DATA_TIERING_SYNC_ENABLED => false) do
+    context "sync" do
+      it "is enabled when no constant is specified" do
+        described_class.new(cache, :sync).should be_enabled
+      end
+
+      it "is disabled if the DATA_TIERING_SYNC_ENABLED is false" do
+        DataTiering::Switch::DATA_TIERING_SYNC_ENABLED = false
         described_class.new(cache, :sync).should_not be_enabled
       end
-    end
 
+      it "is enabled if the DATA_TIERING_SYNC_ENABLED is true" do
+        DataTiering::Switch::DATA_TIERING_SYNC_ENABLED = true
+        described_class.new(cache, :sync).should be_enabled
+      end
+    end
   end
 
 end
