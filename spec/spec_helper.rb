@@ -40,11 +40,11 @@ RSpec.configure do |config|
     Kernel::silence_warnings { object.const_set(constant, value) }
   end
 
-  config.before(:all) do
+  config.before(:suite) do
     setup_database
   end
 
-  config.after(:all) do
+  config.after(:suite) do
     drop_database
   end
 
