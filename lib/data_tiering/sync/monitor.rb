@@ -3,18 +3,18 @@ module DataTiering
 
     class Monitor
 
+      attr_reader :staleness
+
       def initialize(switch, table_names)
         @switch = switch
         @table_names = table_names
+        @staleness = nil
       end
 
       def monitor
-        staleness = calculate_staleness
+        @staleness = calculate_staleness
       rescue
-        staleness = 10_000
-        raise
-      ensure
-        DATADOG.gauge('data_tiering.staleness', staleness, :tags => datadog_tags)
+        @staleness = 10_000
       end
 
       private
@@ -27,12 +27,6 @@ module DataTiering
         @table_names.collect do |table_name|
           SyncLog.last(@switch.active_table_name_for(table_name))
         end
-      end
-
-      def datadog_tags
-        [
-          "environment:#{Rails.env}"
-        ]
       end
 
     end
