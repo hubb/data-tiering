@@ -73,6 +73,11 @@ RSpec.configure do |config|
       t.datetime :started_at
       t.datetime :finished_at
     end
+
+    m.create_table :data_tiering_switches do |t|
+      t.integer :current_active_number
+      t.timestamps
+    end
   end
 
 
