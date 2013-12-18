@@ -3,7 +3,7 @@ require 'spec_helper'
 describe DataTiering::Switch do
 
   def switch_current_active_number
-    DataTiering::Switch.new.switch_current_active_number
+    DataTiering::Switch.new(cache).switch_current_active_number
   end
 
 

@@ -76,7 +76,7 @@ RSpec.configure do |config|
   end
 
   def cache
-    @_cache ||= double(:read => true, :write => true, :clear => true)
+    @_cache ||= Struct.new(:read, :write, :clear).new
   end
 
 end
