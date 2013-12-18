@@ -7,6 +7,8 @@ describe DataTiering::Switch do
   end
 
 
+  subject { DataTiering::Switch.new(cache) }
+
   describe '#active_table_name_for' do
 
     it 'appends "secondary_0" by default' do
@@ -141,16 +143,16 @@ describe DataTiering::Switch do
   describe '#enabled?' do
 
     it 'is enabled for search iff DATA_TIERING_SEARCH_ENABLED is true' do
-      described_class.new.should be_enabled
+      described_class.new(cache).should be_enabled
       with_constants(:DATA_TIERING_SEARCH_ENABLED => false) do
         described_class.new.should_not be_enabled
       end
     end
 
     it 'is enabled for sync iff DATA_TIERING_SYNC_ENABLED is true' do
-      described_class.new(:sync).should be_enabled
+      described_class.new(cache, :sync).should be_enabled
       with_constants(:DATA_TIERING_SYNC_ENABLED => false) do
-        described_class.new(:sync).should_not be_enabled
+        described_class.new(cache, :sync).should_not be_enabled
       end
     end
 

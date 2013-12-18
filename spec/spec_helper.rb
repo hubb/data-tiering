@@ -68,4 +68,8 @@ RSpec.configure do |config|
     end
   end
 
+  def cache
+    @_cache ||= double(:read => true, :write => true, :clear => true)
+  end
+
 end
