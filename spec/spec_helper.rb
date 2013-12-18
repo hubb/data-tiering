@@ -10,6 +10,7 @@ require 'timecop'
 require 'rspec'
 require 'data_tiering'
 require 'data_tiering/sync'
+require 'support/models'
 
 RSpec.configure do |config|
 

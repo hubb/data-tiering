@@ -21,6 +21,10 @@ end
 
 
 describe DataTiering::Sync::SyncTable do
+  before do
+    Rails = double(:env => double(:test? => true))
+  end
+
 
   def build_sync_table
     DataTiering::Sync::SyncTable.new("properties", "properties_secondary_0")

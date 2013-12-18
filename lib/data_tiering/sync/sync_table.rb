@@ -1,5 +1,7 @@
 # encoding: UTF-8
 
+require_relative 'sync_log'
+
 module DataTiering
   module Sync
     class SyncTable
