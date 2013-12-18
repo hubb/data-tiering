@@ -1,4 +1,7 @@
+require 'data_tiering/model'
+
 class Property < ActiveRecord::Base
+  include DataTiering::Model
 end
 
 module DataTieringSyncSpec

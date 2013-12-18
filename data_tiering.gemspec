@@ -23,8 +23,9 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'pry-nav'
   s.add_development_dependency 'timecop'
 
-  s.add_dependency 'activerecord'
-  s.add_dependency 'active_support'
+  s.add_dependency 'activerecord', '2.3.18'
+  s.add_dependency 'activesupport', '2.3.18'
+  s.add_dependency 'activerecord-mysql2-adapter'
   s.add_dependency 'mysql2'
 
   s.files        = `git ls-files`.split("\n")
