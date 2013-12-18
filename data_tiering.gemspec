@@ -24,8 +24,8 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'timecop'
 
   s.add_dependency 'activerecord'
+  s.add_dependency 'active_support'
   s.add_dependency 'sqlite3'
-  s.add_dependency 'rails'
 
   s.files        = `git ls-files`.split("\n")
   s.test_files   = `git ls-files -- spec/*/*_spec*`.split("\n")
