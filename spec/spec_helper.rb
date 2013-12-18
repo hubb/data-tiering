@@ -46,10 +46,16 @@ RSpec.configure do |config|
     setup_database
   end
 
+  config.after(:suite) do
+    `mysql -u root -e "drop database data_tiering_test"`
+  end
+
   def setup_database
+    `mysql -u root -e "create database data_tiering_test"`
+
     ActiveRecord::Base.establish_connection(
-      :adapter  =>  'sqlite3',
-      :database =>  ":memory:"
+      :adapter  =>  'mysql2',
+      :database =>  "data_tiering_test"
     )
 
     m = ActiveRecord::Migration
