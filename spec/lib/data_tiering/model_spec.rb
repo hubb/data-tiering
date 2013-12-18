@@ -11,7 +11,7 @@ shared_examples_for "a model that is part of data tiering" do
     end
 
     it 'does not allow accidental overridding via mass assignment' do
-      t = Time.zone.parse("2013-01-01 12:00")
+      t = Time.parse("12pm 1st January 2013")
       model = described_class.create!(:row_touched_at => t)
       model.attributes = { :row_touched_at => t + 1.year }
       model.read_attribute(:row_touched_at).should == t
