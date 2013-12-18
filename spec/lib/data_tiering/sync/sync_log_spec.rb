@@ -7,7 +7,7 @@ describe DataTiering::Sync::SyncLog do
 
     subject { DataTiering::Sync::SyncLog }
 
-    let(:t) { Time.zone.parse('2012-01-01 12:00') }
+    let(:t) { Time.parse('2012-01-01 12:00') }
 
     it 'remembers the table name, start and end time of a run' do
       Timecop.freeze(t)

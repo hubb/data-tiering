@@ -1,24 +1,18 @@
 require 'spec_helper'
 require 'data_tiering/sync/sync_table'
 
-module DataTieringSyncSpec
-  class Property < ActiveRecord::Base
-    set_table_name "properties_secondary_0"
-  end
-end
-
 shared_examples_for 'a basic table sync mechanism' do
 
   it 'copies over all properties' do
-    Property.store_with_values(:name => "property 1")
-    Property.store_with_values(:name => "property 2")
+    DataTieringSyncSpec::Property.create!(:name => "property 1")
+    DataTieringSyncSpec::Property.create!(:name => "property 2")
     sync
     DataTieringSyncSpec::Property.all.collect(&:name).should =~ ["property 1", "property 2"]
   end
 
   it 'does not change ids' do
-    Property.store_with_values
-    Property.store_with_values
+    DataTieringSyncSpec::Property.create!
+    DataTieringSyncSpec::Property.create!
     sync
     DataTieringSyncSpec::Property.all.collect(&:id).should =~ Property.all.collect(&:id)
   end
@@ -114,7 +108,7 @@ describe DataTiering::Sync::SyncTable do
       end
 
       it 'syncs changes close to the last seen change' do
-        property = Property.store_with_values(:name => "old name")
+        property = Property.create!(:name => "old name")
         sync
         Timecop.freeze(5.minutes.ago) do
           property.name = "new name"
@@ -126,7 +120,7 @@ describe DataTiering::Sync::SyncTable do
       end
 
       it 'does not sync changes that happened a while before the last seen change' do
-        property = Property.store_with_values(:name => "old name")
+        property = Property.create!(:name => "old name")
         sync
         Timecop.freeze(60.minutes.ago) do
           property.name = "new name"
@@ -138,15 +132,15 @@ describe DataTiering::Sync::SyncTable do
       end
 
       it 'syncs new properties' do
-        Property.store_with_values(:name => "property 1")
+        DataTieringSyncSpec::Property.create!(:name => "property 1")
         sync
-        Property.store_with_values(:name => "property 2")
+        DataTieringSyncSpec::Property.create!(:name => "property 2")
         sync
         DataTieringSyncSpec::Property.count.should == 2
       end
 
       it 'syncs changed properties' do
-        property = Property.store_with_values(:name => "old name")
+        property = Property.create!(:name => "old name")
         sync
         property.name = "new name"
         property.save(false)
@@ -155,12 +149,12 @@ describe DataTiering::Sync::SyncTable do
       end
 
       it 'syncs deletions, but does not touch the regular table' do
-        Property.store_with_values(:name => "property 1")
-        property = Property.store_with_values(:name => "property 2")
+        DataTieringSyncSpec::Property.create!(:name => "property 1")
+        property = DataTieringSyncSpec::Property.create!(:name => "property 2")
         sync
         property.delete
         sync
-        Property.count.should == 1
+        DataTieringSyncSpec::Property.count.should == 1
         DataTieringSyncSpec::Property.count.should == 1
       end
 
@@ -168,8 +162,8 @@ describe DataTiering::Sync::SyncTable do
 
         before do
           overwrite_constant :BATCH_SIZE, 1000, DataTiering::Sync::SyncTable::SyncDeltas
-          Property.store_with_values(:id => 100)
-          Property.store_with_values(:id => 1100)
+          DataTieringSyncSpec::Property.create!(:id => 100)
+          DataTieringSyncSpec::Property.create!(:id => 1100)
         end
 
         it 'copies all properties when there is more than one batch' do
@@ -179,14 +173,14 @@ describe DataTiering::Sync::SyncTable do
 
         it 'deletes properties when there is more than one batch' do
           sync
-          Property.find(1100).delete
+          DataTieringSyncSpec::Property.find(1100).delete
           sync
           DataTieringSyncSpec::Property.all.collect(&:id).should =~ [100]
         end
 
         it 'only takes timestamps from an already processed batch' do
           Timecop.freeze(1.month.from_now) do
-            Property.find(100).save(false)
+            DataTieringSyncSpec::Property.find(100).save(false)
           end
           sync
           DataTieringSyncSpec::Property.all.collect(&:id).should =~ [100, 1100]
@@ -200,7 +194,7 @@ describe DataTiering::Sync::SyncTable do
 
         it 'performes only one delete per batch' do
           sync
-          Property.delete_all
+          DataTieringSyncSpec::Property.delete_all
           DataTiering::Sync::SyncLog.stub(:log).and_yield
           ActiveRecord::Base.connection.should_receive(:delete).exactly(:twice)
           sync

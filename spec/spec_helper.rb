@@ -3,47 +3,23 @@
 require 'pry'
 require 'pry-nav'
 
+require 'active_record'
+require 'timecop'
+
 require 'rspec'
-require 'rspec_candy/all'
 require 'data_tiering'
 require 'data_tiering/sync'
 
-require 'timecop'
-require 'active_record'
-
-SPEC_CONNECTIONS = {
-  :mysql => {
-    :adapter  => 'mysql2',
-    :database => 'data_tiering_test',
-    :encoding => 'utf8',
-    :username => 'root',
-    :host     => 'localhost'
-  },
-  :postgresql => {
-    :adapter      => 'postgresql',
-    :database     => 'data_tiering_test',
-    :encoding     => 'unicode',
-    :username     => 'root',
-    :host         => 'localhost',
-    :port         => 5432,
-    :pool         => 5,
-    :min_messages => 'warning'
-  },
-  :sqlite => {
-    :adapter =>  'sqlite3',
-    :database =>  File.join(File.expand_path("..", __FILE__), "data_tiering_test.sqlite")
-  }
-}
-
-ActiveRecord::Base.establish_connection SPEC_CONNECTIONS[(ENV['TEST_DATABASE'] || :mysql).to_sym]
+require 'support/connection'
 
 RSpec.configure do |config|
 
+  $saved_constants = {}
+
   # Allow constant stubbing
   def with_constants(constants, &block)
-    saved_constants = {}
     constants.each do |constant, val|
-      saved_constants[constant] = const_get(constant) if const_defined?(constant)
+      $saved_constants[constant] = const_get(constant) if const_defined?(constant)
       Kernel::silence_warnings { const_set(constant, val) }
     end
 
@@ -51,16 +27,16 @@ RSpec.configure do |config|
       block.call
     ensure
       constants.each do |constant, val|
-        Kernel::silence_warnings { const_set(constant, saved_constants[constant]) }
+        Kernel::silence_warnings { const_set(constant, $saved_constants[constant]) }
       end
     end
   end
 
   def overwrite_constant(constant, value, object = Object)
     constant = constant.to_sym
-    saved_constants[object] ||= {}
-    saved_constants[object][constant] = object.const_get(constant) unless saved_constants[object].has_key?(constant)
-    object.const_set(constant, value)
+    $saved_constants[object] ||= {}
+    $saved_constants[object][constant] = object.const_get(constant) unless $saved_constants[object].has_key?(constant)
+    Kernel::silence_warnings { object.const_set(constant, value) }
   end
 
   config.before :all do

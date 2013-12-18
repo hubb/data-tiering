@@ -22,8 +22,8 @@ describe DataTiering do
       end
 
       it 'results in current property data in the new active table' do
-        Property.store_with_values(:name => "property 1")
-        Property.store_with_values(:name => "property 2")
+        Property.create!(:name => "property 1")
+        Property.create!(:name => "property 2")
         subject.sync_and_switch!
         active_table_name = DataTiering::Switch.new.active_table_name_for("properties")
         active_properties = Class.new(::ActiveRecord::Base) do
@@ -54,9 +54,9 @@ describe DataTiering do
       end
 
       it 'results in current property data in the new active table' do
-        Property.store_with_values(:name => "property 1")
+        Property.create!(:name => "property 1")
         subject.sync_and_switch!
-        Property.store_with_values(:name => "property 2")
+        Property.create!(:name => "property 2")
         subject.sync_and_switch!
         active_table_name = DataTiering::Switch.new.active_table_name_for("properties")
         active_properties = Class.new(::ActiveRecord::Base) do
@@ -80,8 +80,8 @@ describe DataTiering do
       SQL
     end
 
-    let(:property) { Property.store_with_values }
-    let(:old_property) { Property.store_with_values(:row_touched_at => 1.year.ago); Property.last }
+    let(:property) { Property.create! }
+    let(:old_property) { Property.create!(:row_touched_at => 1.year.ago); Property.last }
 
     it 'should be set when a new record is created' do
       time = row_touched_at(property)
