@@ -27,14 +27,14 @@ describe DataTiering::Sync do
       DataTiering::Sync::SyncTable.stub(:new).with("availabilities", "availabilities_inactive_table").and_return(sync_availability_table)
       DataTiering::Sync::SyncTable.stub(:new).with("rates", "rates_inactive_table").and_return(sync_rate_table)
 
-      sync_property_table.should_receive(:sync)
+      sync_property_table.should_receive(:sync).and_call_original
       sync_availability_table.should_receive(:sync)
       sync_rate_table.should_receive(:sync)
       subject.sync_and_switch!
     end
 
-    it 'uses a lock' do
-      Lock.should_receive(:acquire)
+    it 'uses a mutex' do
+      Mutex.any_instance.should_receive(:synchronize)
       subject.sync_and_switch!
     end
 

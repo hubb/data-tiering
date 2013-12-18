@@ -17,7 +17,8 @@ module DataTiering
       # former active table, so we need to wait a bit before doing the next
       # sync.
       def sync_and_switch!
-        Lock.acquire("DataTiering#sync_and_switch", false) do
+        lock = Mutex.new
+        lock.synchronize do
           switch = DataTiering::Switch.new(:sync)
           sync_all_tables(switch)
           switch.switch_current_active_number

@@ -10,6 +10,8 @@ require 'timecop'
 require 'rspec'
 require 'data_tiering'
 require 'data_tiering/sync'
+require 'data_tiering/sync/monitor'
+require 'data_tiering/sync/sync_table'
 require 'support/models'
 
 require 'logger'
