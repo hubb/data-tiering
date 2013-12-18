@@ -44,10 +44,6 @@ RSpec.configure do |config|
     setup_database
   end
 
-  config.after(:suite) do
-    drop_database
-  end
-
   def setup_database
     ActiveRecord::Base.establish_connection(
       :adapter  =>  'sqlite3',
@@ -70,13 +66,6 @@ RSpec.configure do |config|
       t.timestamps
       t.datetime :row_touched_at
     end
-  end
-
-  def drop_database
-    m = ActiveRecord::Migration
-    m.verbose = true
-    m.drop_table :properties
-    m.drop_table :properties_secondary_0
   end
 
 end
