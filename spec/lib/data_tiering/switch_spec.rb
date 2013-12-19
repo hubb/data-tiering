@@ -2,11 +2,6 @@ require 'spec_helper'
 
 describe DataTiering::Switch do
 
-  def switch_current_active_number
-    DataTiering::Switch.new(cache).switch_current_active_number
-  end
-
-
   subject { DataTiering::Switch.new(cache) }
 
   describe '#active_table_name_for' do
@@ -16,25 +11,26 @@ describe DataTiering::Switch do
     end
 
     it 'appends "secondary_1" after the first switch' do
-      switch_current_active_number
+      # require 'pry'; require 'pry-nav'; binding.pry
+      subject.switch_current_active_number
       subject.active_table_name_for("table_name").should == "table_name_secondary_1"
     end
 
     it 'appends "secondary_0" after the second switch' do
-      switch_current_active_number
-      switch_current_active_number
+      subject.switch_current_active_number
+      subject.switch_current_active_number
       subject.active_table_name_for("table_name").should == "table_name_secondary_0"
     end
 
     it 'survives memcache evictions' do
-      switch_current_active_number
+      subject.switch_current_active_number
       cache.clear
       subject.active_table_name_for("table_name").should == "table_name_secondary_1"
     end
 
     it 'does not hit the database by default' do
-      switch_current_active_number
-      DataTiering::Switch::DatabaseSwitch.delete_all
+      subject.switch_current_active_number
+      described_class::DatabaseSwitch.delete_all
       subject.active_table_name_for("table_name").should == "table_name_secondary_1"
     end
 
@@ -64,7 +60,7 @@ describe DataTiering::Switch do
     end
 
     it 'returns a scope using the secondary_1 table after the first switch' do
-      switch_current_active_number
+      subject.switch_current_active_number
       subject.active_scope_for(Property).scope(:find)[:from].should == "`properties_secondary_1` AS `properties`"
     end
 
