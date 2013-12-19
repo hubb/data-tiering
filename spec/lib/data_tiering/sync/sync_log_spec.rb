@@ -5,18 +5,25 @@ describe DataTiering::Sync::SyncLog do
 
   describe '.log' do
 
-    subject { DataTiering::Sync::SyncLog }
+    subject { described_class }
 
-    let(:t) { Time.parse('2012-01-01 12:00') }
+    let(:time) { Time.parse('2012-01-01 12:00') }
+
+    before do
+      Time.stub :current => time
+    end
+
+    after do
+      subject.delete_all
+    end
 
     it 'remembers the table name, start and end time of a run' do
-      Timecop.freeze(t)
       subject.log('table name') do
-        Timecop.freeze(t + 1.hour)
+        Time.stub :current => time + 1.hour
       end
       last = subject.last('table name')
-      last.started_at.should == t
-      last.finished_at.should == t + 1.hour
+      last.started_at.should == time
+      last.finished_at.should == time + 1.hour
     end
 
     it 'only keeps the last one per table name' do
