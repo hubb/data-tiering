@@ -1,6 +1,6 @@
 # encoding: UTF-8
 
-require_relative 'sync_log'
+require 'data_tiering/sync/sync_log'
 
 module DataTiering
   module Sync
