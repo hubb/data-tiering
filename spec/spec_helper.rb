@@ -48,6 +48,16 @@ RSpec.configure do |config|
       t.timestamps
       t.datetime :row_touched_at
     end
+
+    m.create_table :rates do |t|
+      t.string :name
+      t.datetime :start_date
+      t.datetime :end_date
+
+      t.timestamps
+      t.datetime :row_touched_at
+    end
+
     m.create_table :properties_secondary_0 do |t|
       t.string :name
       t.text :description
