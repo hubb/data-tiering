@@ -19,17 +19,18 @@ module DataTiering
       def sync_and_switch!
         lock = Mutex.new
         lock.synchronize do
-          switch = DataTiering::Switch.new(:sync)
           sync_all_tables(switch)
           switch.switch_current_active_number
         end
       end
 
       def monitor
-        switch = DataTiering::Switch.new(:sync)
         DataTiering::Sync::Monitor.new(switch, MODELS_TO_SYNC.collect(&:table_name)).monitor
       end
 
+      def switch
+        @_switch ||= DataTiering::Switch.new(:sync)
+      end
 
       private
 
