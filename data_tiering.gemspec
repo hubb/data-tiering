@@ -20,6 +20,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'pry'
   s.add_development_dependency 'pry-nav'
   s.add_development_dependency 'timecop', '0.5.9.2'
+  s.add_development_dependency 'database_cleaner'
 
   s.add_dependency 'activerecord', '2.3.18'
   s.add_dependency 'activesupport', '2.3.18'

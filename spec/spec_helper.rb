@@ -14,6 +14,8 @@ require 'data_tiering/sync/monitor'
 require 'data_tiering/sync/sync_table'
 require 'support/models'
 
+require 'database_cleaner'
+
 require 'logger'
 ActiveRecord::Base.logger = Logger.new(STDOUT)
 ActiveRecord::Base.logger.level = 2
@@ -25,7 +27,18 @@ RSpec.configure do |config|
 
   config.before(:suite) do
     setup_database
+    DatabaseCleaner.strategy = :deletion
+    DatabaseCleaner.clean_with(:truncation)
   end
+
+  config.before(:each) do
+    DatabaseCleaner.start
+  end
+
+  config.after(:each) do
+    DatabaseCleaner.clean
+  end
+
 
   config.after(:suite) do
     `mysql -u root -e "drop database data_tiering_test"`
