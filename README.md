@@ -1,4 +1,4 @@
-## Data Tiering
+## Data Tiering ![travis-status](https://travis-ci.org/hubb/data-tiering.png)
 
 **Data tiering** is a mechanism we currently use at [HouseTrip](http://www.housetrip.com) to reduce database contention for our search.
 It’s inspired by the double buffering used in video cards.
