@@ -141,14 +141,14 @@ describe DataTiering::Switch do
         subject.should be_enabled
       end
 
-      it "is disabled if the DATA_TIERING_SEARCH_ENABLED is false" do
-        DataTiering::Switch::DATA_TIERING_SEARCH_ENABLED = false
-        subject.should_not be_enabled
+      it "is disabled if the configuration search_enabled is false" do
+        DataTiering.configuration.search_enabled = false
+        described_class.new(cache).should_not be_enabled
       end
 
-      it "is enabled if the DATA_TIERING_SEARCH_ENABLED is true" do
-        DataTiering::Switch::DATA_TIERING_SEARCH_ENABLED = true
-        subject.should be_enabled
+      it "is enabled if the configuration search_enabled is true" do
+        DataTiering.configuration.search_enabled = true
+        described_class.new(cache).should be_enabled
       end
     end
 
@@ -160,12 +160,12 @@ describe DataTiering::Switch do
       end
 
       it "is disabled if the DATA_TIERING_SYNC_ENABLED is false" do
-        DataTiering::Switch::DATA_TIERING_SYNC_ENABLED = false
+        DataTiering.configuration.sync_enabled = false
         subject.should_not be_enabled
       end
 
       it "is enabled if the DATA_TIERING_SYNC_ENABLED is true" do
-        DataTiering::Switch::DATA_TIERING_SYNC_ENABLED = true
+        DataTiering.configuration.sync_enabled = true
         subject.should be_enabled
       end
     end
