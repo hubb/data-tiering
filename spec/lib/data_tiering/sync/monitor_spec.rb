@@ -4,7 +4,7 @@ require 'data_tiering/sync/sync_log'
 
 describe DataTiering::Sync::Monitor do
 
-  let(:now) { Time.parse("2020-01-01 12:00") }
+  let(:time)   { Time.parse("12pm, 1st January 2020") }
   let(:switch) {
     s = DataTiering::Switch.new(cache)
     s.stub(:current_active_number => 1)
@@ -16,16 +16,16 @@ describe DataTiering::Sync::Monitor do
   describe 'monitor' do
 
     before do
-      Timecop.freeze(now)
+      Time.stub :current => time
       DataTiering::Sync::SyncLog.create!(
         :table_name => 'table1_secondary_1',
-        :started_at => now - 10.seconds,
-        :finished_at => now - 5.seconds
+        :started_at => time - 10.seconds,
+        :finished_at => time - 5.seconds
       )
       DataTiering::Sync::SyncLog.create!(
         :table_name => 'table2_secondary_1',
-        :started_at => now - 20.seconds,
-        :finished_at => now - 5.seconds
+        :started_at => time - 20.seconds,
+        :finished_at => time - 5.seconds
       )
     end
 
@@ -37,8 +37,8 @@ describe DataTiering::Sync::Monitor do
     it 'ignores the staleness of inactive tables' do
       DataTiering::Sync::SyncLog.create!(
         :table_name => 'table2_secondary_0',
-        :started_at => now - 60.seconds,
-        :finished_at => now - 55.seconds
+        :started_at => time - 60.seconds,
+        :finished_at => time - 55.seconds
       )
 
       subject.monitor
