@@ -2,8 +2,6 @@ module DataTiering
   module Sync
     module SyncTable::SyncDeltas
 
-      BATCH_SIZE = 100_000
-
 
       private
 
@@ -54,8 +52,8 @@ module DataTiering
       end
 
       def in_batches
-        1.step(max_id, BATCH_SIZE) do |from_id|
-          yield from_id, from_id + BATCH_SIZE - 1
+        1.step(max_id, DataTiering.configuration.batch_size) do |from_id|
+          yield from_id, from_id + DataTiering.configuration.batch_size - 1
         end
       end
 

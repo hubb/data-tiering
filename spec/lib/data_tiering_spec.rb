@@ -10,8 +10,9 @@ describe DataTiering do
       end
     end
 
-    it 'allows you to configure options to the yielded configuration' do
-      config = Struct.new(:an_option).new(:an_option => 'not configured')
+    let(:config) { Struct.new(:an_option).new(:an_option => 'not configured') }
+
+    it 'allows to configure options' do
       subject.stub(:configuration).and_return(config)
 
       subject.configure do |config|

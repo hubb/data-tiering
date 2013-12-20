@@ -155,12 +155,12 @@ describe DataTiering::Sync::SyncTable do
         }
 
         before do
-          @original_contstant_value = DataTiering::Sync::SyncTable::SyncDeltas::BATCH_SIZE
-          DataTiering::Sync::SyncTable::SyncDeltas::BATCH_SIZE = 100
+          @original_batch_size = DataTiering.configuration.batch_size
+          DataTiering.configuration.batch_size = 100
         end
 
         after do
-          DataTiering::Sync::SyncTable::SyncDeltas::BATCH_SIZE = @original_contstant_value
+          DataTiering.configuration.batch_size = @original_batch_size
         end
 
         context 'when more than one batch' do
