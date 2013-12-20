@@ -5,7 +5,6 @@ describe DataTiering::Sync do
   subject { described_class }
 
   before do
-    Rails = double(:env => double(:test? => true))
     subject::SyncLog.delete_all
   end
 
