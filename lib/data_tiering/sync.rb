@@ -5,9 +5,6 @@ require 'data_tiering/switch'
 module DataTiering
   module Sync
 
-    # MODELS_TO_SYNC = [Property, Availability, Rate]
-    MODELS_TO_SYNC = []
-
     module ClassMethods
 
       # Update all current inactive tables that are part of data tiering.
@@ -25,7 +22,7 @@ module DataTiering
       end
 
       def monitor
-        DataTiering::Sync::Monitor.new(switch, MODELS_TO_SYNC.collect(&:table_name)).monitor
+        DataTiering::Sync::Monitor.new(switch, DataTiering.configuration.models_to_sync.collect(&:table_name)).monitor
       end
 
       def switch
@@ -35,7 +32,7 @@ module DataTiering
       private
 
       def sync_all_tables(switch)
-        MODELS_TO_SYNC.each do |model|
+        DataTiering.configuration.models_to_sync.each do |model|
           table_name = model.table_name
           inactive_table_name = switch.inactive_table_name_for(table_name)
           SyncTable.new(table_name, inactive_table_name).sync

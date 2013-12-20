@@ -22,10 +22,6 @@ module DataTiering
 
   class Switch
 
-    DATA_TIERING_SEARCH_ENABLED = true
-    DATA_TIERING_SYNC_ENABLED = true
-
-
     class NotSupported < StandardError; end
 
     class DatabaseSwitch < ::ActiveRecord::Base
@@ -35,9 +31,9 @@ module DataTiering
     def initialize(cache, context = :search)
       case context
       when :search
-        @enabled = DATA_TIERING_SEARCH_ENABLED
+        @enabled = DataTiering.configuration.search_enabled
       when :sync
-        @enabled = DATA_TIERING_SYNC_ENABLED
+        @enabled = DataTiering.configuration.sync_enabled
       else
         raise ArgumentError.new("valid contexts are :search and :sync")
       end
