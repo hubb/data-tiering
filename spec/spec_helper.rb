@@ -3,23 +3,18 @@
 require 'pry'
 require 'pry-nav'
 
+require 'data_tiering'
 require 'active_record'
 require 'active_support'
 require 'timecop'
 
 require 'rspec'
-require 'data_tiering'
-require 'data_tiering/configuration'
-require 'data_tiering/sync'
-require 'data_tiering/sync/monitor'
-require 'data_tiering/sync/sync_table'
 require 'support/models'
 
 require 'database_cleaner'
 
 require 'logger'
-ActiveRecord::Base.logger = Logger.new(STDOUT)
-ActiveRecord::Base.logger.level = 2
+ActiveRecord::Base.logger = Logger.new('/dev/null')
 
 class FakeCache
   def initialize
