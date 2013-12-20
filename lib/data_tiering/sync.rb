@@ -5,8 +5,6 @@ require 'data_tiering/switch'
 module DataTiering
   module Sync
 
-    # MODELS_TO_SYNC = [Property, Availability, Rate]
-
     module ClassMethods
 
       # Update all current inactive tables that are part of data tiering.
