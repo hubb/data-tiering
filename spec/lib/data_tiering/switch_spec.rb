@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'data_tiering/switch'
 
 describe DataTiering::Switch do
 

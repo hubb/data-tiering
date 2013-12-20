@@ -17,6 +17,7 @@
 # will only sync every few minutes.
 
 require 'active_record'
+require 'data_tiering/sync/sync_table'
 
 module DataTiering
 
@@ -36,6 +37,14 @@ module DataTiering
         @enabled = DataTiering.configuration.sync_enabled
       else
         raise ArgumentError.new("valid contexts are :search and :sync")
+      end
+    end
+
+    def sync_all_tables
+      DataTiering.configuration.models_to_sync.each do |model|
+        table_name          = model.table_name
+        inactive_table_name = inactive_table_name_for(table_name)
+        Sync::SyncTable.new(table_name, inactive_table_name).sync
       end
     end
 

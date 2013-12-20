@@ -10,13 +10,13 @@ module DataTiering
       # Update all current inactive tables that are part of data tiering.
       # When that is done, switch the inactive and active tables
       #
-      # Searches running at the time of the switch will keep querying the
+      # Queries running at the time of the switch will keep querying the
       # former active table, so we need to wait a bit before doing the next
       # sync.
       def sync_and_switch!
         lock = Mutex.new
         lock.synchronize do
-          sync_all_tables(switch)
+          switch.sync_all_tables
           switch.switch_current_active_number
         end
       end
@@ -26,17 +26,7 @@ module DataTiering
       end
 
       def switch
-        @_switch ||= DataTiering::Switch.new(:sync)
-      end
-
-      private
-
-      def sync_all_tables(switch)
-        DataTiering.configuration.models_to_sync.each do |model|
-          table_name = model.table_name
-          inactive_table_name = switch.inactive_table_name_for(table_name)
-          SyncTable.new(table_name, inactive_table_name).sync
-        end
+        @_switch ||= Switch.new(:sync)
       end
 
     end
