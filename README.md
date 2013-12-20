@@ -31,6 +31,20 @@ Read more on our [blog post](http://dev.housetrip.com/2013/11/15/data-tiering/)
 
 Add the gem `data_tiering` to your Gemfile and run `bundle install`.
 
+### Using
+
+You need to setup at least 3 things:
+- the cache DataTiering is gonna use to store the current active number
+- the models you want to data-tier
+- include `DataTiering::Model` inside the ActiveRecord class you want to data-tier
+
+```
+DataTiering.configure do |config|
+  config.cache = Rails.cache
+  config.models_to_sync = [MyActiveRecordModel]
+end
+```
+
 ### Testing
 
 By default, DataTiering uses MySQL for test.
