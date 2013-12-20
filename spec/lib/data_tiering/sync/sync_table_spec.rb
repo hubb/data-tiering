@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'data_tiering/sync/sync_table'
+require 'data_tiering/sync'
 
 shared_examples_for 'a basic table sync mechanism' do
 
