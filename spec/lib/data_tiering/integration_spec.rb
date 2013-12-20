@@ -13,9 +13,11 @@ describe DataTiering do
         old_active_table = switch.active_table_name_for("properties")
         old_inactive_table = switch.inactive_table_name_for("properties")
         subject.sync_and_switch!
+
         switch = DataTiering::Switch.new(cache)
         new_active_table = switch.active_table_name_for("properties")
         new_inactive_table = switch.inactive_table_name_for("properties")
+
         old_active_table.should_not == old_inactive_table
         new_active_table.should == old_inactive_table
         new_inactive_table.should == old_active_table
@@ -45,9 +47,11 @@ describe DataTiering do
         old_active_table = switch.active_table_name_for("properties")
         old_inactive_table = switch.inactive_table_name_for("properties")
         subject.sync_and_switch!
+
         switch = DataTiering::Switch.new(cache)
         new_active_table = switch.active_table_name_for("properties")
         new_inactive_table = switch.inactive_table_name_for("properties")
+
         old_active_table.should_not == old_inactive_table
         new_active_table.should == old_inactive_table
         new_inactive_table.should == old_active_table
@@ -92,13 +96,13 @@ describe DataTiering do
     it 'should be set when an existing record is saved' do
       time = row_touched_at(old_property)
       old_property.save(false)
-      row_touched_at(old_property).should > time
+      row_touched_at(old_property).should >= time
     end
 
     it 'should be updated on bulk updates' do
       time = row_touched_at(old_property)
       Property.update_all(:name => "new name") # random column
-      row_touched_at(old_property).should > time
+      row_touched_at(old_property).should >= time
     end
 
   end
