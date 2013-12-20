@@ -4,10 +4,8 @@ describe DataTiering do
 
   subject { DataTiering::Sync }
 
-  context 'on first run' do
-
-    describe '.sync_and_switch!' do
-
+  describe '.sync_and_switch!' do
+    context 'on first run' do
       before do
         DataTiering.configuration.models_to_sync = [Property]
       end
@@ -38,15 +36,9 @@ describe DataTiering do
           set_table_name(active_table_name)
         end
       end
-
     end
 
-  end
-
-  context 'on subsequent runs' do
-
-    describe '.sync_and_switch!' do
-
+    context 'on subsequent runs' do
       it 'interchanges the active and inactive table names' do
         switch = DataTiering::Switch.new
         old_active_table = switch.active_table_name_for("properties")
@@ -73,9 +65,7 @@ describe DataTiering do
           set_table_name(active_table_name)
         end
       end
-
     end
-
   end
 
   context 'mysql timestamps' do
