@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe DataTiering::Switch do
 
-  subject { DataTiering::Switch.new(cache) }
+  subject { described_class.new(cache) }
 
   describe '#active_table_name_for' do
 
@@ -11,7 +11,6 @@ describe DataTiering::Switch do
     end
 
     it 'appends "secondary_1" after the first switch' do
-      # require 'pry'; require 'pry-nav'; binding.pry
       subject.switch_current_active_number
       subject.active_table_name_for("table_name").should == "table_name_secondary_1"
     end
@@ -127,9 +126,9 @@ describe DataTiering::Switch do
     describe '#inactive_table_name_for' do
 
       it 'should raise an error' do
-        proc do
+        expect {
           subject.inactive_table_name_for("properties")
-        end.should raise_error(DataTiering::Switch::NotSupported)
+        }.to raise_error(DataTiering::Switch::NotSupported)
       end
 
     end
@@ -139,33 +138,35 @@ describe DataTiering::Switch do
   describe '#enabled?' do
     context "search" do
       it "is enabled when no constant is specified" do
-        described_class.new(cache).should be_enabled
+        subject.should be_enabled
       end
 
       it "is disabled if the DATA_TIERING_SEARCH_ENABLED is false" do
         DataTiering::Switch::DATA_TIERING_SEARCH_ENABLED = false
-        described_class.new(cache).should_not be_enabled
+        subject.should_not be_enabled
       end
 
       it "is enabled if the DATA_TIERING_SEARCH_ENABLED is true" do
         DataTiering::Switch::DATA_TIERING_SEARCH_ENABLED = true
-        described_class.new(cache).should be_enabled
+        subject.should be_enabled
       end
     end
 
     context "sync" do
+      subject { described_class.new(cache, :sync) }
+
       it "is enabled when no constant is specified" do
-        described_class.new(cache, :sync).should be_enabled
+        subject.should be_enabled
       end
 
       it "is disabled if the DATA_TIERING_SYNC_ENABLED is false" do
         DataTiering::Switch::DATA_TIERING_SYNC_ENABLED = false
-        described_class.new(cache, :sync).should_not be_enabled
+        subject.should_not be_enabled
       end
 
       it "is enabled if the DATA_TIERING_SYNC_ENABLED is true" do
         DataTiering::Switch::DATA_TIERING_SYNC_ENABLED = true
-        described_class.new(cache, :sync).should be_enabled
+        subject.should be_enabled
       end
     end
   end
