@@ -65,7 +65,7 @@ RSpec.configure do |config|
       t.text :description
 
       t.timestamps
-      t.datetime :row_touched_at
+      t.datetime :row_touched_at, :default => Time.current.to_s(:db)
     end
 
     m.create_table :rates do |t|
@@ -74,15 +74,7 @@ RSpec.configure do |config|
       t.datetime :end_date
 
       t.timestamps
-      t.datetime :row_touched_at
-    end
-
-    m.create_table :properties_secondary_0 do |t|
-      t.string :name
-      t.text :description
-
-      t.timestamps
-      t.datetime :row_touched_at
+      t.datetime :row_touched_at, :default => Time.current.to_s(:db)
     end
 
     m.create_table :data_tiering_sync_logs do |t|
