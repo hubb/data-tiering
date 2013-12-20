@@ -101,12 +101,12 @@ module DataTiering
     end
 
     def current_active_number_from_cache
-      (cache.read(cache_key) || 0).to_i
+      cache.read(cache_key).try(:to_i)
     end
 
     def current_active_number_from_database
       # safeguard against memcache evictions
-      DatabaseSwitch.first.andand.current_active_number
+      DatabaseSwitch.first.try(:current_active_number)
     end
 
     def store_current_active_number_in_cache
