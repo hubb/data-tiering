@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe DataTiering::Switch do
 
-  subject { described_class.new(cache) }
+  subject { described_class.new }
 
   describe '#active_table_name_for' do
 
@@ -23,7 +23,7 @@ describe DataTiering::Switch do
 
     it 'survives memcache evictions' do
       subject.switch_current_active_number
-      cache.clear
+      DataTiering.configuration.cache.clear
       subject.active_table_name_for("table_name").should == "table_name_secondary_1"
     end
 
@@ -143,17 +143,17 @@ describe DataTiering::Switch do
 
       it "is disabled if the configuration search_enabled is false" do
         DataTiering.configuration.search_enabled = false
-        described_class.new(cache).should_not be_enabled
+        described_class.new.should_not be_enabled
       end
 
       it "is enabled if the configuration search_enabled is true" do
         DataTiering.configuration.search_enabled = true
-        described_class.new(cache).should be_enabled
+        described_class.new.should be_enabled
       end
     end
 
     context "sync" do
-      subject { described_class.new(cache, :sync) }
+      subject { described_class.new(:sync) }
 
       it "is enabled when no constant is specified" do
         subject.should be_enabled

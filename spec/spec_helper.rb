@@ -39,13 +39,9 @@ class FakeCache
   end
 end
 
-def cache
-  @_cache ||= FakeCache.new
-end
-
 DataTiering.configure do |config|
   config.env = 'test'
-  config.cache = cache
+  config.cache = FakeCache.new
 end
 
 RSpec.configure do |config|
@@ -62,6 +58,7 @@ RSpec.configure do |config|
 
   config.before(:each) do
     DatabaseCleaner.start
+    DataTiering.configuration.cache.clear
   end
 
   config.after(:each) do

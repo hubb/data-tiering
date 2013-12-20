@@ -28,7 +28,7 @@ module DataTiering
       set_table_name 'data_tiering_switches'
     end
 
-    def initialize(cache, context = :search)
+    def initialize(context = :search)
       case context
       when :search
         @enabled = DataTiering.configuration.search_enabled
@@ -101,7 +101,7 @@ module DataTiering
     end
 
     def current_active_number_from_cache
-      cache.read(cache_key).try(:to_i)
+      DataTiering.configuration.cache.read(cache_key).try(:to_i)
     end
 
     def current_active_number_from_database
@@ -110,7 +110,7 @@ module DataTiering
     end
 
     def store_current_active_number_in_cache
-      cache.write(cache_key, @current_active_number)
+      DataTiering.configuration.cache.write(cache_key, @current_active_number)
     end
 
     def store_current_active_number_in_database

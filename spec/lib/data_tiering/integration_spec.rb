@@ -13,12 +13,12 @@ describe DataTiering do
       end
 
       it 'interchanges the active and inactive table names' do
-        switch = DataTiering::Switch.new(cache)
+        switch = DataTiering::Switch.new
         old_active_table = switch.active_table_name_for("properties")
         old_inactive_table = switch.inactive_table_name_for("properties")
         subject.sync_and_switch!
 
-        switch = DataTiering::Switch.new(cache)
+        switch = DataTiering::Switch.new
         new_active_table = switch.active_table_name_for("properties")
         new_inactive_table = switch.inactive_table_name_for("properties")
 
@@ -33,7 +33,7 @@ describe DataTiering do
         subject.sync_and_switch!
 
 
-        active_table_name = DataTiering::Switch.new(cache).active_table_name_for("properties")
+        active_table_name = DataTiering::Switch.new.active_table_name_for("properties")
         active_properties = Class.new(::ActiveRecord::Base) do
           set_table_name(active_table_name)
         end
@@ -48,12 +48,12 @@ describe DataTiering do
     describe '.sync_and_switch!' do
 
       it 'interchanges the active and inactive table names' do
-        switch = DataTiering::Switch.new(cache)
+        switch = DataTiering::Switch.new
         old_active_table = switch.active_table_name_for("properties")
         old_inactive_table = switch.inactive_table_name_for("properties")
         subject.sync_and_switch!
 
-        switch = DataTiering::Switch.new(cache)
+        switch = DataTiering::Switch.new
         new_active_table = switch.active_table_name_for("properties")
         new_inactive_table = switch.inactive_table_name_for("properties")
 
@@ -68,7 +68,7 @@ describe DataTiering do
         Property.create!(:name => "property 2")
         subject.sync_and_switch!
 
-        active_table_name = DataTiering::Switch.new(cache).active_table_name_for("properties")
+        active_table_name = DataTiering::Switch.new.active_table_name_for("properties")
         active_properties = Class.new(::ActiveRecord::Base) do
           set_table_name(active_table_name)
         end

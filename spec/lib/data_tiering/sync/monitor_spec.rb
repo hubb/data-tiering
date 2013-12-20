@@ -6,7 +6,7 @@ describe DataTiering::Sync::Monitor do
 
   let(:time)   { Time.parse("12pm, 1st January 2020") }
   let(:switch) {
-    s = DataTiering::Switch.new(cache)
+    s = DataTiering::Switch.new
     s.stub(:current_active_number => 1)
     s
   }

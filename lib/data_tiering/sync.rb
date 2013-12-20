@@ -26,7 +26,7 @@ module DataTiering
       end
 
       def switch
-        @_switch ||= DataTiering::Switch.new(DataTiering.configuration.cache, :sync)
+        @_switch ||= DataTiering::Switch.new(:sync)
       end
 
       private
