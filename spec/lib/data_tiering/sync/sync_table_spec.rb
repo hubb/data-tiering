@@ -69,7 +69,6 @@ describe DataTiering::Sync::SyncTable do
     end
 
     context 'when delta syncing is possible' do
-
       before do
         subject.send(:recreate_inactive_table)
         subject.stub(:delta_sync_possible? => true)
@@ -148,11 +147,16 @@ describe DataTiering::Sync::SyncTable do
       context "batch processing" do
 
         let!(:property1) { Property.create!(:name => "Hello") }
-        let!(:property2) { Property.create!(:name => "World!") }
+        let!(:property2) {
+          property = Property.create!(:name => "World!")
+          # We need to manually set the id to 100 so batches can work
+          ::ActiveRecord::Base.connection.execute("UPDATE `properties` SET `id`='101' WHERE `id` = '#{property.id}'")
+          Property.find(101)
+        }
 
         before do
           @original_contstant_value = DataTiering::Sync::SyncTable::SyncDeltas::BATCH_SIZE
-          DataTiering::Sync::SyncTable::SyncDeltas::BATCH_SIZE = 1
+          DataTiering::Sync::SyncTable::SyncDeltas::BATCH_SIZE = 100
         end
 
         after do
@@ -185,7 +189,6 @@ describe DataTiering::Sync::SyncTable do
 
         it 'performs only one insert per batch' do
           DataTiering::Sync::SyncLog.stub(:log).and_yield
-
           ActiveRecord::Base.connection.should_receive(:insert).exactly(:twice)
           subject.sync
         end
