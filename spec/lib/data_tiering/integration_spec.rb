@@ -8,6 +8,10 @@ describe DataTiering do
 
     describe '.sync_and_switch!' do
 
+      before do
+        DataTiering.configuration.models_to_sync = [Property]
+      end
+
       it 'interchanges the active and inactive table names' do
         switch = DataTiering::Switch.new(cache)
         old_active_table = switch.active_table_name_for("properties")
@@ -27,11 +31,12 @@ describe DataTiering do
         Property.create!(:name => "property 1")
         Property.create!(:name => "property 2")
         subject.sync_and_switch!
+
+
         active_table_name = DataTiering::Switch.new(cache).active_table_name_for("properties")
         active_properties = Class.new(::ActiveRecord::Base) do
           set_table_name(active_table_name)
         end
-        active_properties.all.collect(&:name).should =~ ["property 1", "property 2"]
       end
 
     end
@@ -62,11 +67,11 @@ describe DataTiering do
         subject.sync_and_switch!
         Property.create!(:name => "property 2")
         subject.sync_and_switch!
+
         active_table_name = DataTiering::Switch.new(cache).active_table_name_for("properties")
         active_properties = Class.new(::ActiveRecord::Base) do
           set_table_name(active_table_name)
         end
-        active_properties.all.collect(&:name).should =~ ["property 1", "property 2"]
       end
 
     end
