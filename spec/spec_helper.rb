@@ -26,6 +26,7 @@ RSpec.configure do |config|
   config.formatter     = :documentation
 
   config.before(:suite) do
+    Time.zone = 'London'
     setup_database
     DatabaseCleaner.strategy = :deletion
     DatabaseCleaner.clean_with(:truncation)
