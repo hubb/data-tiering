@@ -1,13 +1,12 @@
 # encoding: UTF-8
 
 require 'data_tiering/sync/sync_log'
+require 'data_tiering/sync/sync_all'
+require 'data_tiering/sync/sync_deltas'
 
 module DataTiering
   module Sync
     class SyncTable
-
-      require 'data_tiering/sync/sync_table/sync_all'
-      require 'data_tiering/sync/sync_table/sync_deltas'
 
       include SyncAll
       include SyncDeltas

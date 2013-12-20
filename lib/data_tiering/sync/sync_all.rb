@@ -1,6 +1,6 @@
 module DataTiering
   module Sync
-    module SyncTable::SyncAll
+    module SyncAll
 
       private
 
@@ -21,7 +21,6 @@ module DataTiering
           SELECT * FROM #{quote @source_table_name}
         SQL
       end
-
     end
   end
 end

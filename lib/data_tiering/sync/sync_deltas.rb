@@ -1,6 +1,6 @@
 module DataTiering
   module Sync
-    module SyncTable::SyncDeltas
+    module SyncDeltas
 
 
       private
