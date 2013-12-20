@@ -16,5 +16,3 @@ module DataTiering
     @configuration ||= Configuration.new
   end
 end
-
-# require 'data_tiering/sync'
