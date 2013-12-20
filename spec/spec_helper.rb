@@ -21,6 +21,10 @@ require 'logger'
 ActiveRecord::Base.logger = Logger.new(STDOUT)
 ActiveRecord::Base.logger.level = 2
 
+DataTiering.configure do |config|
+  config.env = 'test'
+end
+
 RSpec.configure do |config|
 
   config.color_enabled = true

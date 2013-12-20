@@ -72,7 +72,7 @@ module DataTiering
       end
 
       def notify_about_schema_change
-        unless Rails.env.test?
+        unless DataTiering.configuration.env == 'test'
           # this should only ever happen within a rake task
           puts "Data tiering: Schema for #{@inactive_table_name} out of date"
           puts "I'll update it. This will take some time."

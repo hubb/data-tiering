@@ -1,6 +1,6 @@
 module DataTiering
   class Configuration
-    attr_accessor :models_to_sync, :search_enabled, :sync_enabled
+    attr_accessor :models_to_sync, :search_enabled, :sync_enabled, :env
 
     def initialize
       # @models_to_sync = [Property, Availability, Rate] to be re-introduced at some point
