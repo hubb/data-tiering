@@ -21,8 +21,31 @@ require 'logger'
 ActiveRecord::Base.logger = Logger.new(STDOUT)
 ActiveRecord::Base.logger.level = 2
 
+class FakeCache
+  def initialize
+    @values = {}
+  end
+
+  def read(key)
+    @values[key]
+  end
+
+  def write(key, value)
+    @values[key] = value
+  end
+
+  def clear
+    @values = {}
+  end
+end
+
+def cache
+  @_cache ||= FakeCache.new
+end
+
 DataTiering.configure do |config|
   config.env = 'test'
+  config.cache = cache
 end
 
 RSpec.configure do |config|
@@ -101,28 +124,4 @@ RSpec.configure do |config|
       SET #{column_name} = '2000-01-01 00:00:01'
     SQL
   end
-
-
-  class FakeCache
-    def initialize
-      @values = {}
-    end
-
-    def read(key)
-      @values[key]
-    end
-
-    def write(key, value)
-      @values[key] = value
-    end
-
-    def clear
-      @values = {}
-    end
-  end
-
-  def cache
-    @_cache ||= FakeCache.new
-  end
-
 end
