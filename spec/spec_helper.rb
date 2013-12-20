@@ -58,35 +58,48 @@ RSpec.configure do |config|
       :database =>  "data_tiering_test"
     )
 
-    m = ActiveRecord::Migration
-    m.verbose = true
-    m.create_table :properties do |t|
+    migration = ActiveRecord::Migration
+    migration.verbose = true
+    migration.create_table :properties do |t|
       t.string :name
       t.text :description
 
       t.timestamps
-      t.datetime :row_touched_at, :default => Time.current.to_s(:db)
     end
+    add_timestamp(migration, :properties, :row_touched_at)
 
-    m.create_table :rates do |t|
+    migration.create_table :rates do |t|
       t.string :name
       t.datetime :start_date
       t.datetime :end_date
 
       t.timestamps
-      t.datetime :row_touched_at, :default => Time.current.to_s(:db)
     end
+    add_timestamp(migration, :rates, :row_touched_at)
 
-    m.create_table :data_tiering_sync_logs do |t|
+    migration.create_table :data_tiering_sync_logs do |t|
       t.string :table_name
       t.datetime :started_at
       t.datetime :finished_at
     end
 
-    m.create_table :data_tiering_switches do |t|
+    migration.create_table :data_tiering_switches do |t|
       t.integer :current_active_number
       t.timestamps
     end
+  end
+
+  def add_timestamp(migration, table_name, column_name)
+    migration.execute <<-SQL
+      ALTER TABLE #{table_name}
+      ADD #{column_name} TIMESTAMP
+      DEFAULT CURRENT_TIMESTAMP
+      ON UPDATE CURRENT_TIMESTAMP
+    SQL
+    migration.update <<-SQL
+      UPDATE #{table_name}
+      SET #{column_name} = '2000-01-01 00:00:01'
+    SQL
   end
 
 
