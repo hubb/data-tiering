@@ -74,7 +74,7 @@ RSpec.configure do |config|
     )
 
     migration = ActiveRecord::Migration
-    migration.verbose = true
+    migration.verbose = ENV.fetch('VERBOSE', false)
     migration.create_table :properties do |t|
       t.string :name
       t.text :description
