@@ -1,3 +1,5 @@
+require 'data_tiering/switch'
+
 module DataTiering
 
   module HelperMethods
