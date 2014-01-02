@@ -10,29 +10,13 @@ require 'timecop'
 
 require 'rspec'
 require 'support/models'
+require 'support/fake_cache'
 
 require 'database_cleaner'
 
 require 'logger'
 ActiveRecord::Base.logger = Logger.new('/dev/null')
 
-class FakeCache
-  def initialize
-    @values = {}
-  end
-
-  def read(key)
-    @values[key]
-  end
-
-  def write(key, value)
-    @values[key] = value
-  end
-
-  def clear
-    @values = {}
-  end
-end
 
 DataTiering.configure do |config|
   config.env = 'test'
@@ -70,7 +54,7 @@ RSpec.configure do |config|
 
     ActiveRecord::Base.establish_connection(
       :adapter  =>  'mysql2',
-      :database =>  "data_tiering_test"
+      :database =>  'data_tiering_test'
     )
 
     migration = ActiveRecord::Migration
