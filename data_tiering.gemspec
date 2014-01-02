@@ -3,7 +3,7 @@
 lib = File.expand_path('lib')
 $:.unshift(lib) unless $:.include?(lib)
 
-require 'data_tiering'
+require 'data_tiering/version'
 
 Gem::Specification.new do |s|
   s.name        = 'data_tiering'
