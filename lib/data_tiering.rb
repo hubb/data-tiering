@@ -6,7 +6,7 @@ $:.unshift(lib) unless $:.include?(lib)
 require 'data_tiering/configuration'
 
 module DataTiering
-  VERSION = '0.0.2'
+  VERSION = '0.0.3'
 
   def self.configure
     yield(configuration)
