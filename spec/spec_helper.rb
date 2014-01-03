@@ -17,6 +17,9 @@ require 'database_cleaner'
 require 'logger'
 ActiveRecord::Base.logger = Logger.new('/dev/null')
 
+database_config = YAML.load(File.read('spec/database.yml'))['test']
+
+ActiveRecord::Migration.verbose = false
 
 DataTiering.configure do |config|
   config.env = 'test'
@@ -24,15 +27,25 @@ DataTiering.configure do |config|
 end
 
 RSpec.configure do |config|
-
   config.color_enabled = true
   config.formatter     = :documentation
 
   config.before(:suite) do
     Time.zone = 'London'
-    setup_database
+
+    ActiveRecord::Base.establish_connection database_config.merge('database' => nil)
+    ActiveRecord::Base.connection.drop_database database_config['database'] rescue nil
+    ActiveRecord::Base.connection.create_database database_config['database']
+    ActiveRecord::Base.establish_connection database_config
+
+    run_migrations
+
     DatabaseCleaner.strategy = :deletion
     DatabaseCleaner.clean_with(:truncation)
+  end
+
+  config.after(:suite) do
+    ActiveRecord::Base.connection.drop_database database_config['database'] rescue nil
   end
 
   config.before(:each) do
@@ -44,60 +57,8 @@ RSpec.configure do |config|
     DatabaseCleaner.clean
   end
 
-
-  config.after(:suite) do
-    `mysql -u root -e "drop database data_tiering_test"`
-  end
-
-  def setup_database
-    `mysql -u root -e "create database data_tiering_test"`
-
-    ActiveRecord::Base.establish_connection(
-      :adapter  =>  'mysql2',
-      :database =>  'data_tiering_test'
-    )
-
-    migration = ActiveRecord::Migration
-    migration.verbose = ENV.fetch('VERBOSE', false)
-    migration.create_table :properties do |t|
-      t.string :name
-      t.text :description
-
-      t.timestamps
-    end
-    add_timestamp(migration, :properties, :row_touched_at)
-
-    migration.create_table :rates do |t|
-      t.string :name
-      t.datetime :start_date
-      t.datetime :end_date
-
-      t.timestamps
-    end
-    add_timestamp(migration, :rates, :row_touched_at)
-
-    migration.create_table :data_tiering_sync_logs do |t|
-      t.string :table_name
-      t.datetime :started_at
-      t.datetime :finished_at
-    end
-
-    migration.create_table :data_tiering_switches do |t|
-      t.integer :current_active_number
-      t.timestamps
-    end
-  end
-
-  def add_timestamp(migration, table_name, column_name)
-    migration.execute <<-SQL
-      ALTER TABLE #{table_name}
-      ADD #{column_name} TIMESTAMP
-      DEFAULT CURRENT_TIMESTAMP
-      ON UPDATE CURRENT_TIMESTAMP
-    SQL
-    migration.update <<-SQL
-      UPDATE #{table_name}
-      SET #{column_name} = '2000-01-01 00:00:01'
-    SQL
+  def run_migrations
+    ActiveRecord::Migrator.migrate File.expand_path('../support/migrations/', __FILE__)
+    ActiveRecord::Migrator.migrate File.expand_path('../../lib/generators/data_tiering/migrations/', __FILE__)
   end
 end

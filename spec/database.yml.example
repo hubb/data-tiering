@@ -1,0 +1,10 @@
+default: &default
+  adapter: mysql2
+  encoding: utf8
+  username: root
+  password: secret
+  reconnect: true
+
+test:
+  <<: *default
+  database: data_tiering_test
