@@ -11,32 +11,27 @@ describe DataTiering::Sync::Monitor do
     s
   }
 
-  subject { described_class.new(switch, %w(table1 table2)) }
+  subject { described_class.new(switch) }
 
   describe 'monitor' do
 
     before do
       Time.stub :current => time
       DataTiering::Sync::SyncLog.create!(
-        :table_name => 'table1_secondary_1',
-        :started_at => time - 10.seconds,
-        :finished_at => time - 5.seconds
-      )
-      DataTiering::Sync::SyncLog.create!(
-        :table_name => 'table2_secondary_1',
+        :table_name => 'properties_secondary_1',
         :started_at => time - 20.seconds,
         :finished_at => time - 5.seconds
       )
     end
 
-    it 'reports the most stale sync log for an active table to datadog' do
+    it 'reports the most stale sync log for an active table' do
       subject.monitor
       subject.staleness.should == 20
     end
 
     it 'ignores the staleness of inactive tables' do
       DataTiering::Sync::SyncLog.create!(
-        :table_name => 'table2_secondary_0',
+        :table_name => 'properties_secondary_0',
         :started_at => time - 60.seconds,
         :finished_at => time - 55.seconds
       )

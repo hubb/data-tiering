@@ -1,3 +1,5 @@
+require 'data_tiering/sync/sync_log'
+
 module DataTiering
   module Sync
 
@@ -5,9 +7,8 @@ module DataTiering
 
       attr_reader :staleness
 
-      def initialize(switch, table_names)
-        @switch = switch
-        @table_names = table_names
+      def initialize(switch)
+        @switch    = switch
         @staleness = nil
       end
 
@@ -24,7 +25,7 @@ module DataTiering
       end
 
       def sync_logs_for_active_tables
-        @table_names.collect do |table_name|
+        DataTiering.configuration.models_to_sync.collect(&:table_name).collect do |table_name|
           SyncLog.last(@switch.active_table_name_for(table_name))
         end
       end

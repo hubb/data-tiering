@@ -23,7 +23,7 @@ module DataTiering
       end
 
       def monitor
-        DataTiering::Sync::Monitor.new(switch, DataTiering.configuration.models_to_sync.collect(&:table_name)).monitor
+        DataTiering::Sync::Monitor.new(switch).monitor
       end
 
       def switch

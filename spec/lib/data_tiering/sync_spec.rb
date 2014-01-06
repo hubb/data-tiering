@@ -50,8 +50,7 @@ describe DataTiering::Sync do
 
     it 'instantiates and calls a Monitor' do
       described_class::Monitor.should_receive(:new).with(
-        instance_of(DataTiering::Switch),
-        %w(properties rates)
+        instance_of(DataTiering::Switch)
       ).and_return(monitor)
 
       monitor.should_receive(:monitor)
