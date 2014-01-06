@@ -1,6 +1,7 @@
 # encoding: UTF-8
 
 require 'data_tiering/switch'
+require 'data_tiering/sync/monitor'
 
 module DataTiering
   module Sync
