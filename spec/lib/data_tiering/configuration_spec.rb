@@ -39,5 +39,23 @@ describe DataTiering::Configuration do
       subject.batch_size = 30
       expect(subject.batch_size).to eql(30)
     end
+
+    context 'cache' do
+      let(:cache) { proc { 'yay!' } }
+
+      it 'invokes the proc if a proc is given' do
+        subject.cache = cache
+        cache.should_receive(:call).and_call_original
+
+        subject.cache.should eql('yay!')
+      end
+
+      it 'returns the cache if it\'s not a proc' do
+        subject.cache = 'yay'
+        cache.should_not_receive :call
+
+        subject.cache.should eql('yay')
+      end
+    end
   end
 end

@@ -13,5 +13,9 @@ module DataTiering
       @sync_enabled   = true
       @batch_size     = 100_000
     end
+
+    def cache
+      @cache.is_a?(Proc) ? @cache.call : @cache
+    end
   end
 end
