@@ -7,7 +7,7 @@ describe DataTiering do
   describe '.sync_and_switch!' do
     context 'on first run' do
       before do
-        DataTiering.configuration.models_to_sync = [Property]
+        DataTiering.configuration.models_to_sync = ['Property']
       end
 
       it 'interchanges the active and inactive table names' do

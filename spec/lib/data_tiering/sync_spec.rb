@@ -9,7 +9,7 @@ describe DataTiering::Sync do
   end
 
   before :all do
-    DataTiering.configuration.models_to_sync = [Property, Rate]
+    DataTiering.configuration.models_to_sync = ['Property', 'Rate']
   end
 
   after :all do
@@ -33,7 +33,7 @@ describe DataTiering::Sync do
     end
 
     it 'creates a SyncLog record for each model we want to sync' do
-      DataTiering.configuration.models_to_sync = [Property, Rate]
+      DataTiering.configuration.models_to_sync = ['Property', 'Rate']
 
       expect {
         subject.sync_and_switch!

@@ -30,14 +30,18 @@ describe DataTiering::Configuration do
       expect(subject.sync_enabled).to be_false
     end
 
-    it 'configures models to sync' do
-      subject.models_to_sync = [1,2,3]
-      expect(subject.models_to_sync).to eq([1,2,3])
-    end
-
     it 'configures size of batch to sync' do
       subject.batch_size = 30
       expect(subject.batch_size).to eql(30)
+    end
+
+    context 'models to sync' do
+
+      it 'accepts model names as strings' do
+        subject.models_to_sync = ['Property']
+        expect(subject.models_to_sync).to eq([Property])
+      end
+
     end
 
     context 'cache' do

@@ -17,5 +17,11 @@ module DataTiering
     def cache
       @cache.is_a?(Proc) ? @cache.call : @cache
     end
+
+    def models_to_sync
+      @models_to_sync.map do |model|
+        model.constantize
+      end
+    end
   end
 end
