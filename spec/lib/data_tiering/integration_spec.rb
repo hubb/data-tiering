@@ -35,6 +35,7 @@ describe DataTiering do
         active_properties = Class.new(::ActiveRecord::Base) do
           set_table_name(active_table_name)
         end
+        active_properties.should have(2).items
       end
     end
 
@@ -64,6 +65,7 @@ describe DataTiering do
         active_properties = Class.new(::ActiveRecord::Base) do
           set_table_name(active_table_name)
         end
+        active_properties.should have(2).items
       end
     end
   end
