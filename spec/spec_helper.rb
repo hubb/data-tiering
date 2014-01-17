@@ -54,11 +54,13 @@ RSpec.configure do |config|
   end
 
   config.after(:each) do
-    DatabaseCleaner.clean
+    DatabaseCleaner.clean rescue Mysql2::Error # migration specs mess up tables
   end
 
   def run_migrations
-    ActiveRecord::Migrator.migrate File.expand_path('../support/migrations/', __FILE__)
-    ActiveRecord::Migrator.migrate File.expand_path('../../lib/generators/data_tiering/migrations/', __FILE__)
+    setup_migration = Class.new(ActiveRecord::Migration).extend(DataTiering::SetupMigration)
+    setup_migration.up
+    # ActiveRecord::Migrator.migrate File.expand_path('../support/migrations/', __FILE__)
+    # ActiveRecord::Migrator.migrate File.expand_path('../../lib/generators/data_tiering/migrations/', __FILE__)
   end
 end

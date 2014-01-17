@@ -4,6 +4,7 @@ lib = File.expand_path('lib')
 $:.unshift(lib) unless $:.include?(lib)
 
 require 'data_tiering/configuration'
+require 'data_tiering/setup_migration'
 
 module DataTiering
   def self.configure
