@@ -5,6 +5,7 @@ $:.unshift(lib) unless $:.include?(lib)
 
 require 'data_tiering/configuration'
 require 'data_tiering/setup_migration'
+require 'data_tiering/model_migration'
 
 module DataTiering
   def self.configure

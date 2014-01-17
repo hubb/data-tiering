@@ -6,6 +6,10 @@ class DataTieringSyncLogs < ActiveRecord::Base; end;
 describe DataTiering::SetupMigration do
   subject { Class.new(ActiveRecord::Migration).extend(described_class) }
 
+  after :all do
+    subject.up rescue Mysql2::Error
+  end
+
   it "is an active record migration" do
     subject.ancestors.should include(ActiveRecord::Migration)
   end

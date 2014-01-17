@@ -21,6 +21,37 @@ database_config = YAML.load(File.read('spec/database.yml'))['test']
 
 ActiveRecord::Migration.verbose = false
 
+class CreateProperties < ActiveRecord::Migration
+  def self.up
+    create_table :properties do |t|
+      t.string :name
+      t.text :description
+
+      t.timestamps
+    end
+  end
+
+  def self.down
+    drop_table :properties
+  end
+end
+
+class CreateRates < ActiveRecord::Migration
+  def self.up
+    create_table :rates do |t|
+      t.string :name
+      t.datetime :start_date
+      t.datetime :end_date
+
+      t.timestamps
+    end
+  end
+
+  def self.down
+    drop_table :rates
+  end
+end
+
 DataTiering.configure do |config|
   config.env = 'test'
   config.cache = FakeCache.new
@@ -60,7 +91,16 @@ RSpec.configure do |config|
   def run_migrations
     setup_migration = Class.new(ActiveRecord::Migration).extend(DataTiering::SetupMigration)
     setup_migration.up
-    # ActiveRecord::Migrator.migrate File.expand_path('../support/migrations/', __FILE__)
-    # ActiveRecord::Migrator.migrate File.expand_path('../../lib/generators/data_tiering/migrations/', __FILE__)
+
+    CreateProperties.up
+    CreateRates.up
+
+    properties_model_migration = Class.new(ActiveRecord::Migration).extend(DataTiering::ModelMigration)
+    properties_model_migration.table_name = 'properties'
+    properties_model_migration.up
+
+    rates_model_migration = Class.new(ActiveRecord::Migration).extend(DataTiering::ModelMigration)
+    rates_model_migration.table_name = 'rates'
+    rates_model_migration.up
   end
 end
