@@ -46,6 +46,20 @@ DataTiering.configure do |config|
 end
 ```
 
+You will need to run a setup migration to create the necessary data tiering tables, as well as additional migrations for any models you have.
+
+```
+class CreateDataTieringTables < ActiveRecord::Migration
+  extend DataTiering::SetupMigration
+end
+
+# migration for Property model
+class AddDataTieringToProperties < ActiveRecord::Migration
+  extend DataTiering::ModelMigration
+  self.table_name = 'properties' # the name of the table for your model
+end
+```
+
 ### Testing
 
 By default, DataTiering uses MySQL for test.
